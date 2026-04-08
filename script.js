@@ -476,20 +476,14 @@ const ORDER_SYSTEM = {
     pendingOrder: null, // 等待接单的订单
 
     // 生成随机订单
-    generateOrder(firstOrder = false) {
-        // 如果是新玩家第一份订单，固定给"薯片"（最简单）
-        let randomRecipe;
-        if (firstOrder) {
-            randomRecipe = "薯片";
-        } else {
-            const recipeNames = Object.keys(RECIPES);
-            // 过滤掉锁定的菜谱
-            const availableRecipes = recipeNames.filter(name => {
-                const recipe = RECIPES[name];
-                return !recipe.locked || game.unlockedRecipes.includes(name);
-            });
-            randomRecipe = availableRecipes[Math.floor(Math.random() * availableRecipes.length)];
-        }
+    generateOrder() {
+        const recipeNames = Object.keys(RECIPES);
+        // 过滤掉锁定的菜谱
+        const availableRecipes = recipeNames.filter(name => {
+            const recipe = RECIPES[name];
+            return !recipe.locked || game.unlockedRecipes.includes(name);
+        });
+        const randomRecipe = availableRecipes[Math.floor(Math.random() * availableRecipes.length)];
         const recipe = RECIPES[randomRecipe];
         const npc = NPCS[Math.floor(Math.random() * NPCS.length)];
 
@@ -549,9 +543,27 @@ const ORDER_SYSTEM = {
         // 如果已经在对话中，不显示
         if (this.pendingNPC) return;
 
-        // 生成待接订单（如果当前没有已接订单，说明是新玩家第一份）
-        const isFirstOrder = this.orders.length === 0;
-        this.pendingOrder = this.generateOrder(isFirstOrder);
+        // 检查玩家是否从来没有完成过订单（新玩家第一份订单给薯片）
+        const hasCompletedAnyOrder = localStorage.getItem(`farm_order_completed_${currentPlayer}`);
+        const isFirstOrder = !hasCompletedAnyOrder && this.orders.length === 0;
+        
+        // 生成待接订单
+        if (isFirstOrder) {
+            // 第一份订单固定为薯片
+            const recipe = RECIPES["薯片"];
+            const npc = NPCS[Math.floor(Math.random() * NPCS.length)];
+            this.pendingOrder = {
+                id: Date.now() + Math.random(),
+                productName: "薯片",
+                productIcon: recipe.icon,
+                quantity: 1,
+                reward: Math.floor(recipe.basePrice * 1.15), // 固定1.15倍奖励
+                npc: npc,
+                createdAt: Date.now()
+            };
+        } else {
+            this.pendingOrder = this.generateOrder();
+        }
         this.pendingNPC = this.pendingOrder.npc;
 
         // 显示通知按钮
@@ -600,6 +612,11 @@ const ORDER_SYSTEM = {
         this.pendingNPC = null;
         this.pendingOrder = null;
 
+        // 标记玩家已完成过订单（不再是新玩家）
+        if (currentPlayer) {
+            localStorage.setItem(`farm_order_completed_${currentPlayer}`, 'true');
+        }
+
         // 设置冷却时间
         this.setCooldown();
 
@@ -638,6 +655,11 @@ const ORDER_SYSTEM = {
         // 移除完成订单
         this.orders.splice(index, 1);
         this.saveOrders();
+
+        // 标记玩家已完成过订单（不再是新玩家）
+        if (currentPlayer) {
+            localStorage.setItem(`farm_order_completed_${currentPlayer}`, 'true');
+        }
 
         // 设置冷却时间
         this.setCooldown();
