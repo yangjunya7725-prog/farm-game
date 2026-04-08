@@ -690,6 +690,25 @@ const ORDER_SYSTEM = {
     saveNextOrderTime() {
         const timeKey = currentPlayer ? `farm_order_next_time_player${currentPlayer}` : 'farm_order_next_time';
         localStorage.setItem(timeKey, this.nextOrderTime.toString());
+    },
+
+    // 主动寻找新订单
+    seekNewOrder() {
+        const maxOrders = 5; // 最多同时持有5个订单
+
+        if (this.orders.length >= maxOrders) {
+            return { success: false, message: '订单已满，请先完成现有订单' };
+        }
+
+        // 生成新订单（非第一份订单，使用随机生成）
+        const newOrder = this.generateOrder();
+        this.orders.push(newOrder);
+        this.saveOrders();
+
+        // 更新订单标记
+        updateOrderBadge();
+
+        return { success: true, order: newOrder };
     }
 };
 
@@ -1642,8 +1661,26 @@ function renderWorkshop() {
 function renderWorkshopOrders() {
     workshopOrdersList.innerHTML = '';
 
+    // 添加"寻找新订单"按钮
+    const seekBtn = document.createElement('button');
+    seekBtn.className = 'seek-order-btn';
+    seekBtn.innerHTML = '🔍 寻找新订单';
+    seekBtn.onclick = () => {
+        const result = ORDER_SYSTEM.seekNewOrder();
+        if (result.success) {
+            showAlert(`找到新订单：${RECIPES[result.order.productName].name} × ${result.order.quantity}`, '📋 订单获取成功');
+            renderWorkshopOrders();
+        } else {
+            showAlert(result.message, '💡 提示');
+        }
+    };
+    workshopOrdersList.appendChild(seekBtn);
+
     if (ORDER_SYSTEM.orders.length === 0) {
-        workshopOrdersList.innerHTML = '<p style="color: #999; text-align: center; padding: 40px;">暂无订单，请稍后再来~</p>';
+        const emptyMsg = document.createElement('p');
+        emptyMsg.style.cssText = 'color: #999; text-align: center; padding: 40px;';
+        emptyMsg.textContent = '暂无订单，点击上方按钮寻找新订单~';
+        workshopOrdersList.appendChild(emptyMsg);
         return;
     }
 
