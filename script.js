@@ -487,8 +487,8 @@ const ORDER_SYSTEM = {
         const recipe = RECIPES[randomRecipe];
         const npc = NPCS[Math.floor(Math.random() * NPCS.length)];
 
-        // 数量 1-3 随机（第一份订单固定为1，确保能完成）
-        const quantity = firstOrder ? 1 : Math.floor(Math.random() * 3) + 1;
+        // 数量 1-3 随机
+        const quantity = Math.floor(Math.random() * 3) + 1;
 
         // 奖励 = 基础价格 × 数量 × 1.1 ~ 1.25 倍，合理利润 15-30%
         const bonusMultiplier = 1.1 + Math.random() * 0.15;

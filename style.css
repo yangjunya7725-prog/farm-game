@@ -1774,25 +1774,21 @@ button {
 /* 寻找新订单按钮 */
 .seek-order-btn {
     grid-column: 1 / -1;
-    padding: 15px 30px;
-    background: linear-gradient(135deg, #8B7355 0%, #A08060 100%);
-    color: #FAFAF5;
+    padding: 10px 20px;
+    background: #90A090;
+    color: white;
     border: none;
-    border-radius: 12px;
-    font-size: 16px;
+    border-radius: 8px;
+    font-size: 14px;
     font-weight: bold;
     cursor: pointer;
-    transition: all 0.3s;
-    box-shadow: 0 4px 12px rgba(139, 115, 85, 0.3);
+    transition: all 0.2s;
+    margin-bottom: 10px;
 }
 
 .seek-order-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgba(139, 115, 85, 0.4);
-}
-
-.seek-order-btn:active {
-    transform: translateY(0);
+    background: #7A8A7A;
+    transform: scale(1.02);
 }
 
 /* 订单卡片 */
