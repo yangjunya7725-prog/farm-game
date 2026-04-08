@@ -1,0 +1,716 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 20px;
+    font-family: "Microsoft YaHei", Arial, sans-serif;
+    background: url('bg.jpg') no-repeat center center fixed;
+    background-size: cover;
+    min-height: 100vh;
+}
+
+/* 侧边按钮栏 - 右上角 */
+#sidebar {
+    position: fixed;
+    right: 20px;
+    top: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    z-index: 100;
+}
+
+.side-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 12px 10px;
+    border: 2px solid #D0D0C8 !important;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s;
+    background: #F5F5F0 !important;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    min-width: 60px;
+}
+
+.side-btn:hover {
+    background: #E8E8E0 !important;
+    transform: scale(1.05);
+    box-shadow: 0 6px 15px rgba(0,0,0,0.3);
+}
+
+.btn-icon {
+    font-size: 28px;
+    margin-bottom: 6px;
+}
+
+.btn-text {
+    font-size: 12px;
+    color: #5A5A50;
+    font-weight: bold;
+    writing-mode: vertical-rl;
+    text-orientation: upright;
+    letter-spacing: 2px;
+}
+
+button {
+    font-family: inherit;
+}
+
+/* 农场网格 - 4层8列梯田，占满页面下方40% */
+#farm {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 40%;
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    grid-template-rows: repeat(4, auto);
+    gap: 0;
+    padding: 15px 20px;
+    align-content: end;
+}
+
+/* 地块基础样式 */
+.plot {
+    background: transparent;
+    cursor: none;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* 第1层 (0-7) - 最上层，高度45px */
+.plot:nth-child(1), .plot:nth-child(2), .plot:nth-child(3), .plot:nth-child(4),
+.plot:nth-child(5), .plot:nth-child(6), .plot:nth-child(7), .plot:nth-child(8) {
+    width: 100%;
+    height: 45px;
+    font-size: 32px;
+}
+
+/* 第2层 (8-15) - 高度55px */
+.plot:nth-child(9), .plot:nth-child(10), .plot:nth-child(11), .plot:nth-child(12),
+.plot:nth-child(13), .plot:nth-child(14), .plot:nth-child(15), .plot:nth-child(16) {
+    width: 100%;
+    height: 55px;
+    font-size: 40px;
+}
+
+/* 第3层 (16-23) - 高度70px */
+.plot:nth-child(17), .plot:nth-child(18), .plot:nth-child(19), .plot:nth-child(20),
+.plot:nth-child(21), .plot:nth-child(22), .plot:nth-child(23), .plot:nth-child(24) {
+    width: 100%;
+    height: 70px;
+    font-size: 52px;
+}
+
+/* 第4层 (24-31) - 最下层，高度85px */
+.plot:nth-child(25), .plot:nth-child(26), .plot:nth-child(27), .plot:nth-child(28),
+.plot:nth-child(29), .plot:nth-child(30), .plot:nth-child(31), .plot:nth-child(32) {
+    width: 100%;
+    height: 85px;
+    font-size: 64px;
+}
+
+/* 种植后不显示铲子 */
+.plot.planted {
+    cursor: default;
+}
+
+/* 浮动动画 */
+@keyframes float {
+    0%, 100% { transform: translateX(-50%) translateY(0); }
+    50% { transform: translateX(-50%) translateY(-5px); }
+}
+
+/* 仓库面板 - 米白色风格 */
+#warehouse-panel {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #F5F5F0;
+    padding: 30px;
+    border-radius: 16px;
+    box-shadow: 0 15px 50px rgba(0,0,0,0.25);
+    min-width: 350px;
+    max-width: 450px;
+    border: 3px solid #D0D0C8;
+}
+
+#warehouse-panel h3 {
+    margin-top: 0;
+    color: #5A5A50;
+    text-align: center;
+    font-size: 24px;
+    margin-bottom: 25px;
+}
+
+/* 仓库网格 */
+.warehouse-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    margin-bottom: 20px;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+/* 仓库种子项 */
+.warehouse-item {
+    background: #FAFAF5;
+    border: 2px solid #D0D0C8;
+    border-radius: 12px;
+    padding: 15px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+    transition: transform 0.2s;
+}
+
+.warehouse-item:hover {
+    transform: scale(1.02);
+    border-color: #B0B0A8;
+}
+
+.warehouse-seed-icon {
+    font-size: 32px;
+}
+
+.warehouse-seed-info {
+    flex: 1;
+}
+
+.warehouse-seed-name {
+    font-size: 16px;
+    font-weight: bold;
+    color: #5A5A50;
+}
+
+.warehouse-seed-count {
+    font-size: 14px;
+    color: #8B4513;
+    margin-top: 3px;
+}
+
+/* 仓库种子可点击种植 */
+#warehouse-panel[data-plot] .warehouse-item {
+    cursor: pointer;
+    border-color: #90A090;
+    background: #F0F5F0;
+}
+
+#warehouse-panel[data-plot] .warehouse-item:hover {
+    transform: scale(1.05);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+    border-color: #6A806A;
+}
+
+#warehouse-panel[data-plot] .warehouse-seed-name::after {
+    content: ' (点击种植)';
+    font-size: 12px;
+    color: #6A806A;
+}
+
+#warehouse-empty {
+    text-align: center;
+    padding: 40px 20px;
+    color: #999;
+    font-size: 16px;
+    font-style: italic;
+}
+
+#close-warehouse {
+    background: #D0D0C8;
+    color: #5A5A50;
+    width: 100%;
+    padding: 12px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    font-size: 15px;
+}
+
+#close-warehouse:hover {
+    background: #C0C0B8;
+}
+
+/* 商店面板 - 米白色风格 */
+#shop-panel {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #F5F5F0;
+    padding: 25px;
+    border-radius: 16px;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.25);
+    min-width: 420px;
+    border: 3px solid #D0D0C8;
+}
+
+/* 商店头部 - 标题和银币 */
+.shop-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #D0D0C8;
+}
+
+.shop-header h3 {
+    margin: 0;
+    color: #5A5A50;
+    font-size: 22px;
+}
+
+.shop-coins {
+    background: #FAFAF5;
+    border: 2px solid #D0D0C8;
+    color: #5A5A50;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.shop-coins b {
+    margin-left: 4px;
+}
+
+/* 货架网格 - 每层3个 */
+.shop-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 20px;
+}
+
+/* 货架层 */
+.shelf-row {
+    display: flex;
+    justify-content: space-around;
+    background: linear-gradient(180deg, #E8E8E0 0%, #D8D8D0 50%, #C8C8C0 100%);
+    padding: 12px 8px;
+    border-radius: 6px;
+    border-bottom: 3px solid #B0B0A8;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+    position: relative;
+}
+
+/* 货架层前面的木板效果 */
+.shelf-row::after {
+    content: '';
+    position: absolute;
+    bottom: -3px;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: #A0A098;
+    border-radius: 0 0 4px 4px;
+}
+
+/* 种子商品卡片 */
+.seed-item {
+    background: #F5F5F0;
+    border: 2px solid #D0D0C8;
+    border-radius: 10px;
+    padding: 12px 8px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    min-width: 80px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.08);
+}
+
+.seed-item:hover {
+    transform: translateY(-3px) scale(1.03);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+    border-color: #B0B0A8;
+    background: #FAFAF5;
+}
+
+.seed-item:active {
+    transform: translateY(-1px) scale(1.01);
+}
+
+.seed-icon {
+    font-size: 32px;
+    margin-bottom: 5px;
+}
+
+.seed-name {
+    font-size: 13px;
+    color: #5A5A50;
+    margin-bottom: 4px;
+    font-weight: bold;
+}
+
+.seed-price {
+    font-size: 12px;
+    color: #8B4513;
+    font-weight: bold;
+    background: rgba(255,255,255,0.6);
+    padding: 2px 8px;
+    border-radius: 10px;
+    display: inline-block;
+}
+
+#close-shop {
+    background: #D0D0C8;
+    color: #5A5A50;
+    width: 100%;
+    padding: 12px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    font-size: 15px;
+    transition: all 0.2s;
+}
+
+#close-shop:hover {
+    background: #C0C0B8;
+}
+
+#shop-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 20px;
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* 确认弹窗 - 米白色风格 */
+#confirm-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+}
+
+.confirm-content {
+    background: #F5F5F0;
+    padding: 25px 35px;
+    border-radius: 16px;
+    border: 3px solid #D0D0C8;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+    text-align: center;
+    min-width: 280px;
+    animation: popIn 0.2s ease-out;
+}
+
+@keyframes popIn {
+    0% { transform: scale(0.8); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+.confirm-content h4 {
+    margin: 0 0 15px 0;
+    color: #5A5A50;
+    font-size: 20px;
+}
+
+#confirm-text {
+    color: #5A5A50;
+    font-size: 16px;
+    margin: 0 0 25px 0;
+    line-height: 1.5;
+}
+
+.confirm-buttons {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+}
+
+.confirm-buttons button {
+    padding: 10px 25px;
+    border: none;
+    border-radius: 8px;
+    font-size: 15px;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+}
+
+#confirm-cancel {
+    background: #D0D0C8;
+    color: #5A5A50;
+}
+
+#confirm-cancel:hover {
+    background: #C0C0B8;
+    transform: translateY(-2px);
+}
+
+#confirm-ok {
+    background: #90A090;
+    color: white;
+}
+
+#confirm-ok:hover {
+    background: #7A8A7A;
+    transform: translateY(-2px);
+}
+
+/* 跟随鼠标的铲子 */
+#shovel {
+    position: fixed;
+    pointer-events: none;
+    font-size: 32px;
+    z-index: 1000;
+    display: none;
+    transform: translate(-50%, -50%);
+}
+
+/* 启动页 - 古朴风格 */
+#start-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, #E8E4DC 0%, #D4CFC3 50%, #C8C2B4 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 3000;
+}
+
+.start-content {
+    text-align: center;
+    padding: 60px 80px;
+    background: #F5F5F0;
+    border: 4px solid #B8B0A0;
+    border-radius: 20px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.5);
+    position: relative;
+}
+
+.start-content::before {
+    content: '';
+    position: absolute;
+    top: -8px;
+    left: -8px;
+    right: -8px;
+    bottom: -8px;
+    border: 2px solid #A09080;
+    border-radius: 24px;
+    pointer-events: none;
+}
+
+#start-screen h1 {
+    font-size: 52px;
+    color: #5A5A50;
+    margin: 0 0 15px 0;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+    letter-spacing: 8px;
+}
+
+#start-screen .subtitle {
+    font-size: 20px;
+    color: #8B7355;
+    margin: 0 0 40px 0;
+    letter-spacing: 4px;
+    font-style: italic;
+}
+
+.start-btn {
+    background: linear-gradient(180deg, #90A090 0%, #7A8A7A 100%);
+    color: white;
+    border: none;
+    padding: 18px 50px;
+    border-radius: 12px;
+    font-size: 22px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 0 auto;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+    transition: all 0.3s;
+}
+
+.start-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    background: linear-gradient(180deg, #9AB09A 0%, #849484 100%);
+}
+
+.start-btn:active {
+    transform: translateY(-1px);
+}
+
+.start-btn .btn-icon {
+    font-size: 28px;
+    margin: 0;
+}
+
+.start-btn .btn-text {
+    writing-mode: horizontal-tb;
+    letter-spacing: 4px;
+    color: white;
+    font-size: 20px;
+}
+
+/* 视频层 */
+#video-layer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: black;
+    z-index: 2500;
+}
+
+#video-layer video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* 结束动画层 */
+#outro-layer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: black;
+    z-index: 3000;
+}
+
+#outro-layer video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* 结束游戏按钮 - 特殊样式 */
+.exit-btn {
+    background: #E8E0D8 !important;
+    border-color: #C0B8B0 !important;
+}
+
+.exit-btn:hover {
+    background: #D8D0C8 !important;
+}
+
+.exit-btn .btn-text {
+    color: #8B4513;
+}
+
+/* 游戏主容器 */
+#game-container {
+    width: 100%;
+    height: 100vh;
+}
+
+/* 生长倒计时标签 - 默认隐藏，鼠标悬停时显示 */
+.growth-timer {
+    position: absolute;
+    bottom: 2px;
+    right: 2px;
+    background: rgba(0, 0, 0, 0.6);
+    color: #fff;
+    font-size: 10px;
+    padding: 1px 4px;
+    border-radius: 4px;
+    pointer-events: none;
+    z-index: 10;
+    opacity: 0;
+    transition: opacity 0.2s;
+}
+
+/* 作物名称标签 - 默认隐藏，鼠标悬停时显示 */
+.crop-name-label {
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    background: rgba(0, 0, 0, 0.6);
+    color: #fff;
+    font-size: 10px;
+    padding: 1px 4px;
+    border-radius: 4px;
+    pointer-events: none;
+    z-index: 10;
+    opacity: 0;
+    transition: opacity 0.2s;
+}
+
+.plot:hover .growth-timer,
+.plot:hover .crop-name-label {
+    opacity: 1;
+}
+
+/* 消息提示弹窗 - 米白色风格 */
+#alert-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+}
+
+.alert-content {
+    background: #F5F5F0;
+    padding: 25px 35px;
+    border-radius: 16px;
+    border: 3px solid #D0D0C8;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+    text-align: center;
+    min-width: 280px;
+    animation: popIn 0.2s ease-out;
+}
+
+.alert-content h4 {
+    margin: 0 0 15px 0;
+    color: #5A5A50;
+    font-size: 20px;
+}
+
+#alert-text {
+    color: #5A5A50;
+    font-size: 16px;
+    margin: 0 0 25px 0;
+    line-height: 1.5;
+}
+
+#alert-ok {
+    background: #90A090;
+    color: white;
+    padding: 10px 35px;
+    border: none;
+    border-radius: 8px;
+    font-size: 15px;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+}
+
+#alert-ok:hover {
+    background: #7A8A7A;
+    transform: translateY(-2px);
+}

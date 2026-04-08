@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>梯田农场</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- 启动页 -->
+    <div id="start-screen">
+        <div class="start-content">
+            <h1>🌾 梯田农场</h1>
+            <p class="subtitle">贵州山居 · 种田养家</p>
+            <button id="start-game-btn" class="start-btn">
+                <span class="btn-icon">🌱</span>
+                <span class="btn-text">开始游戏</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- 视频播放层 -->
+    <div id="video-layer" class="hidden">
+        <video id="intro-video" src="intro.mp4" playsinline></video>
+    </div>
+
+    <!-- 结束动画层 -->
+    <div id="outro-layer" class="hidden">
+        <video id="outro-video" src="outro.mp4" playsinline></video>
+    </div>
+
+    <!-- 游戏主内容（初始隐藏） -->
+    <div id="game-container" class="hidden">
+    <!-- 侧边按钮栏 - 古朴风格 -->
+    <div id="sidebar">
+        <button id="warehouse-btn" class="side-btn">
+            <span class="btn-icon">🧺</span>
+            <span class="btn-text">种子仓库</span>
+        </button>
+        <button id="shop-btn" class="side-btn shop-btn">
+            <span class="btn-icon">🫘</span>
+            <span class="btn-text">种子商店</span>
+        </button>
+        <button id="exit-btn" class="side-btn exit-btn">
+            <span class="btn-icon">🌙</span>
+            <span class="btn-text">结束游戏</span>
+        </button>
+    </div>
+
+    <!-- 4x8 梯田种植网格 -->
+    <div id="farm">
+        <!-- 第1层 8个 -->
+        <div class="plot" data-index="0"></div>
+        <div class="plot" data-index="1"></div>
+        <div class="plot" data-index="2"></div>
+        <div class="plot" data-index="3"></div>
+        <div class="plot" data-index="4"></div>
+        <div class="plot" data-index="5"></div>
+        <div class="plot" data-index="6"></div>
+        <div class="plot" data-index="7"></div>
+        <!-- 第2层 8个 -->
+        <div class="plot" data-index="8"></div>
+        <div class="plot" data-index="9"></div>
+        <div class="plot" data-index="10"></div>
+        <div class="plot" data-index="11"></div>
+        <div class="plot" data-index="12"></div>
+        <div class="plot" data-index="13"></div>
+        <div class="plot" data-index="14"></div>
+        <div class="plot" data-index="15"></div>
+        <!-- 第3层 8个 -->
+        <div class="plot" data-index="16"></div>
+        <div class="plot" data-index="17"></div>
+        <div class="plot" data-index="18"></div>
+        <div class="plot" data-index="19"></div>
+        <div class="plot" data-index="20"></div>
+        <div class="plot" data-index="21"></div>
+        <div class="plot" data-index="22"></div>
+        <div class="plot" data-index="23"></div>
+        <!-- 第4层 8个 -->
+        <div class="plot" data-index="24"></div>
+        <div class="plot" data-index="25"></div>
+        <div class="plot" data-index="26"></div>
+        <div class="plot" data-index="27"></div>
+        <div class="plot" data-index="28"></div>
+        <div class="plot" data-index="29"></div>
+        <div class="plot" data-index="30"></div>
+        <div class="plot" data-index="31"></div>
+    </div>
+
+    <!-- 跟随鼠标的铲子 -->
+    <div id="shovel">🪏</div>
+
+    <!-- 种子仓库面板（默认隐藏，种植时也会用到） -->
+    <div id="warehouse-panel" class="hidden" data-plot="">
+        <h3>🎒 种子仓库</h3>
+        <div id="warehouse-list" class="warehouse-grid"></div>
+        <div id="warehouse-empty" class="hidden">仓库为空，去商店购买吧！</div>
+        <button id="close-warehouse">关闭</button>
+    </div>
+
+    <!-- 种子商店面板（默认隐藏） -->
+    <div id="shop-panel" class="hidden">
+        <div class="shop-header">
+            <h3>🫘 种子商店</h3>
+            <span class="shop-coins">🪙 <b id="shop-coins">100</b></span>
+        </div>
+        <div id="shop-list" class="shop-grid"></div>
+        <button id="close-shop">关闭</button>
+    </div>
+
+    <!-- 确认弹窗（默认隐藏） -->
+    <div id="confirm-modal" class="hidden">
+        <div class="confirm-content">
+            <h4>🛒 确认购买</h4>
+            <p id="confirm-text">确认购买种子？</p>
+            <div class="confirm-buttons">
+                <button id="confirm-cancel">取消</button>
+                <button id="confirm-ok">确定</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 消息提示弹窗（默认隐藏） -->
+    <div id="alert-modal" class="hidden">
+        <div class="alert-content">
+            <h4 id="alert-title">💡 提示</h4>
+            <p id="alert-text"></p>
+            <button id="alert-ok">确定</button>
+        </div>
+    </div>
+
+    </div>
+
+    <script src="script.js?v=22"></script>
+</body>
+</html>

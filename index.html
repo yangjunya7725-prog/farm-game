@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>送你这块田</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Dancing+Script:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- 启动页 -->
+    <div id="start-screen">
+        <!-- 飘动的云朵 -->
+        <div class="cloud cloud-1">☁️</div>
+        <div class="cloud cloud-2">☁️</div>
+        <div class="cloud cloud-3">☁️</div>
+
+        <div class="start-content">
+            <h1><span class="rice-decor">🌾</span> 送你这块田 <span class="rice-decor">🌾</span></h1>
+            <p class="subtitle">For our PlanC</p>
+            <button id="start-game-btn" class="start-btn">
+                <span class="btn-icon">🌱</span>
+                <span class="btn-text">开始游戏</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- 账号选择界面 -->
+    <div id="account-select-screen" class="hidden">
+        <div class="cloud cloud-1">☁️</div>
+        <div class="cloud cloud-2">☁️</div>
+        <div class="cloud cloud-3">☁️</div>
+
+        <div class="account-content">
+            <div class="account-list">
+                <div class="account-card heart-card" data-player="1">
+                    <div class="heart-shape"></div>
+                    <div class="account-name" id="player1-name">朵朵</div>
+                    <div class="account-status" id="player1-status"></div>
+                </div>
+                <div class="account-card heart-card" data-player="2">
+                    <div class="heart-shape"></div>
+                    <div class="account-name" id="player2-name">麦麦</div>
+                    <div class="account-status" id="player2-status"></div>
+                </div>
+            </div>
+            <button id="back-to-start" class="back-btn">返回</button>
+        </div>
+    </div>
+
+    <!-- 视频播放层 -->
+    <div id="video-layer" class="hidden">
+        <video id="intro-video" src="intro.mp4" playsinline></video>
+    </div>
+
+    <!-- 结束动画层 -->
+    <div id="outro-layer" class="hidden">
+        <video id="outro-video" src="outro.mp4" playsinline></video>
+    </div>
+
+    <!-- 背景音乐 -->
+    <audio id="bgm-farm" src="bgm-farm.mp3" loop preload="auto"></audio>
+    <audio id="bgm-workshop" src="bgm-workshop.mp3" loop preload="auto"></audio>
+
+    <!-- 音乐控制按钮 -->
+    <div id="music-control">
+        <button id="music-toggle" class="music-btn">🔊</button>
+        <div id="music-volume-panel" class="hidden">
+            <input type="range" id="music-volume" min="0" max="100" value="50">
+        </div>
+    </div>
+
+    <!-- 游戏主内容（初始隐藏） -->
+    <div id="game-container" class="hidden">
+    <!-- 侧边按钮栏 - 古朴风格 -->
+    <div id="sidebar">
+        <button id="warehouse-btn" class="side-btn">
+            <span class="btn-icon">🧺</span>
+            <span class="btn-text">仓库</span>
+        </button>
+        <button id="shop-btn" class="side-btn shop-btn">
+            <span class="btn-icon">🫘</span>
+            <span class="btn-text">商店</span>
+        </button>
+        <button id="workshop-btn" class="side-btn workshop-btn">
+            <span class="btn-icon">🛖</span>
+            <span class="btn-text">加工坊</span>
+        </button>
+        <button id="exit-btn" class="side-btn exit-btn">
+            <span class="btn-icon">🌙</span>
+            <span class="btn-text">结束游戏</span>
+        </button>
+    </div>
+
+    <!-- 4x8 梯田种植网格 -->
+    <div id="farm">
+        <!-- 第1层 8个 -->
+        <div class="plot" data-index="0"></div>
+        <div class="plot" data-index="1"></div>
+        <div class="plot" data-index="2"></div>
+        <div class="plot" data-index="3"></div>
+        <div class="plot" data-index="4"></div>
+        <div class="plot" data-index="5"></div>
+        <div class="plot" data-index="6"></div>
+        <div class="plot" data-index="7"></div>
+        <!-- 第2层 8个 -->
+        <div class="plot" data-index="8"></div>
+        <div class="plot" data-index="9"></div>
+        <div class="plot" data-index="10"></div>
+        <div class="plot" data-index="11"></div>
+        <div class="plot" data-index="12"></div>
+        <div class="plot" data-index="13"></div>
+        <div class="plot" data-index="14"></div>
+        <div class="plot" data-index="15"></div>
+        <!-- 第3层 8个 -->
+        <div class="plot" data-index="16"></div>
+        <div class="plot" data-index="17"></div>
+        <div class="plot" data-index="18"></div>
+        <div class="plot" data-index="19"></div>
+        <div class="plot" data-index="20"></div>
+        <div class="plot" data-index="21"></div>
+        <div class="plot" data-index="22"></div>
+        <div class="plot" data-index="23"></div>
+        <!-- 第4层 8个 -->
+        <div class="plot" data-index="24"></div>
+        <div class="plot" data-index="25"></div>
+        <div class="plot" data-index="26"></div>
+        <div class="plot" data-index="27"></div>
+        <div class="plot" data-index="28"></div>
+        <div class="plot" data-index="29"></div>
+        <div class="plot" data-index="30"></div>
+        <div class="plot" data-index="31"></div>
+    </div>
+
+    <!-- 跟随鼠标的铲子 -->
+    <div id="shovel">🪏</div>
+
+    <!-- 种子仓库面板（默认隐藏，种植时也会用到） -->
+    <div id="warehouse-panel" class="hidden" data-plot="">
+        <h3>🧺 仓库</h3>
+        <div id="warehouse-list" class="warehouse-grid"></div>
+        <div id="warehouse-empty" class="hidden">仓库为空，去商店购买吧！</div>
+        <button id="close-warehouse">关闭</button>
+    </div>
+
+    <!-- 商店面板（默认隐藏） -->
+    <div id="shop-panel" class="hidden">
+        <div class="shop-header">
+            <h3>🛒 商店</h3>
+            <span class="shop-coins">🪙 <b id="shop-coins">100</b></span>
+        </div>
+        <div class="shop-tabs">
+            <button id="tab-seeds" class="shop-tab active">🫘 种子</button>
+            <button id="tab-seasonings" class="shop-tab">🧂 调味料</button>
+        </div>
+        <div id="shop-list" class="shop-grid"></div>
+        <button id="close-shop">关闭</button>
+    </div>
+
+    <!-- 加工坊面板（默认隐藏） -->
+    <div id="workshop-panel" class="hidden">
+        <!-- 加工坊侧边按钮栏 -->
+        <div id="workshop-sidebar">
+            <button id="workshop-orders-btn" class="side-btn">
+                <span class="btn-icon">📋</span>
+                <span class="btn-text">订单</span>
+                <span id="order-badge" class="order-badge">0</span>
+            </button>
+            <button id="workshop-recipes-btn" class="side-btn">
+                <span class="btn-icon">🍽️</span>
+                <span class="btn-text">菜谱</span>
+            </button>
+            <button id="close-workshop" class="side-btn">
+                <span class="btn-icon">🌾</span>
+                <span class="btn-text">返回田野</span>
+            </button>
+        </div>
+
+        <!-- 加工坊内容区 -->
+        <div class="workshop-content">
+            <!-- 订单页面（默认隐藏） -->
+            <div id="workshop-orders-page" class="workshop-page hidden">
+                <h3>📋 订单</h3>
+                <div id="workshop-orders-list" class="orders-grid">
+                    <p style="color: #999; text-align: center; padding: 40px;">订单系统即将上线...</p>
+                </div>
+                <button class="workshop-page-close">关闭</button>
+            </div>
+
+            <!-- 菜谱页面（默认隐藏） -->
+            <div id="workshop-recipes-page" class="workshop-page hidden">
+                <div class="workshop-materials">
+                    <h4>📦 原材料</h4>
+                    <div id="workshop-materials-list" class="materials-grid"></div>
+                </div>
+                <div class="workshop-recipes">
+                    <h4>🍽️ 菜谱</h4>
+                    <div id="workshop-recipes-list" class="recipes-grid"></div>
+                </div>
+                <button class="workshop-page-close">关闭</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 确认弹窗（默认隐藏） -->
+    <div id="confirm-modal" class="hidden">
+        <div class="confirm-content">
+            <h4>🛒 确认购买</h4>
+            <p id="confirm-text">确认购买种子？</p>
+            <div class="confirm-buttons">
+                <button id="confirm-cancel">取消</button>
+                <button id="confirm-ok">确定</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 消息提示弹窗（默认隐藏） -->
+    <div id="alert-modal" class="hidden">
+        <div class="alert-content">
+            <h4 id="alert-title">💡 提示</h4>
+            <p id="alert-text"></p>
+            <button id="alert-ok">确定</button>
+        </div>
+    </div>
+
+    <!-- 订单通知按钮（默认隐藏） -->
+    <div id="order-notification" class="hidden">
+        <button id="order-notification-btn">
+            <span class="notification-icon">📋</span>
+            <span class="notification-text">有人来找你了</span>
+        </button>
+    </div>
+
+    <!-- NPC对话弹窗（默认隐藏） -->
+    <div id="dialogue-modal" class="hidden">
+        <div class="dialogue-content">
+            <div class="dialogue-npc">
+                <span id="dialogue-npc-icon" class="npc-avatar">👩‍🍳</span>
+                <span id="dialogue-npc-name">食堂王阿姨</span>
+            </div>
+            <div class="dialogue-box">
+                <p id="dialogue-text">小伙子，听说你这儿的货不错啊！</p>
+                <button id="dialogue-next">继续 ▶</button>
+            </div>
+            <div id="dialogue-order-info" class="hidden">
+                <div class="order-request">
+                    <span id="dialogue-order-icon" class="order-icon">🌶️</span>
+                    <span id="dialogue-order-details">辣椒酱 × 3</span>
+                    <span id="dialogue-order-reward" class="order-reward">💰 300银币</span>
+                </div>
+                <div class="dialogue-buttons">
+                    <button id="dialogue-accept" class="accept-btn">接单</button>
+                    <button id="dialogue-reject" class="reject-btn">不接</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 烹饪完成全屏特效 -->
+    <div id="cooking-complete-overlay" class="hidden">
+        <div class="flash-effect"></div>
+        <div class="product-showcase">
+            <img id="complete-product-image" src="" alt="成品">
+            <div id="complete-product-name"></div>
+            <div class="complete-text">制作完成！</div>
+        </div>
+    </div>
+
+    </div>
+
+    <script src="script.js?v=36"></script>
+</body>
+</html>
