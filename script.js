@@ -788,9 +788,9 @@ function loadGame() {
         console.log(`新游戏 (玩家${currentPlayer})`);
         
         if (currentPlayer === '2') {
-            // 麦麦：150银币 + 能做一份薯片的材料
+            // 麦麦：200银币 + 能做一份薯片的材料
             game = {
-                coins: 150,
+                coins: 200,
                 plots: Array(32).fill(null),
                 inventory: {
                     seeds: {},
